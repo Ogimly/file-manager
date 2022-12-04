@@ -4,7 +4,8 @@
   "description": "rss node.js week 2",
   "type": "module",
   "scripts": {
-    "start": "npm run start -- --username=ogimly"
+    "start": "node index.js ",
+    "ogimly": "node index.js --username=ogimly"
   },
   "repository": {
     "type": "git",
