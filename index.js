@@ -1,4 +1,5 @@
-import { chdir, env, exit, stdin, stdout, stderr } from 'process';
+import { chdir, env, exit } from 'process';
+import { stdin as input, stdout as output, stderr as errOutput } from 'process';
 import { EOL, homedir } from 'os';
 import { pipeline } from 'stream';
 
@@ -16,19 +17,19 @@ const start = () => {
 
     chdir(homedir());
 
-    stdout.write(EOL + `Welcome to the File Manager, ${env.username}!${EOL}`);
+    output.write(EOL + `Welcome to the File Manager, ${env.username}!${EOL}`);
     writeInviteMessage();
 
     // main event loop
-    pipeline(stdin, commandHandler, stdout, (error) => {
+    pipeline(input, commandHandler, output, (error) => {
       if (error) {
-        stderr.write(`Operation failed: ${error}${EOL}`);
+        errOutput.write(`Operation failed: ${error}${EOL}`);
       }
     });
 
     // on exit
     process.on('exit', () => {
-      stdout.write(`Thank you for using File Manager, ${env.username}, goodbye!${EOL}`);
+      output.write(`Thank you for using File Manager, ${env.username}, goodbye!${EOL}`);
     });
     process.on('SIGINT', () => {
       exit();
@@ -36,11 +37,11 @@ const start = () => {
   } catch (error) {
     switch (error.message) {
       case errorCode.noUser:
-        stderr.write(`Please enter your username!${EOL}`);
+        errOutput.write(`Please enter your username!${EOL}`);
         break;
 
       default:
-        stderr.write(`Operation failed: ${error}${EOL}`);
+        errOutput.write(`Operation failed: ${error}${EOL}`);
         break;
     }
     exit();

@@ -1,5 +1,5 @@
 import path, { dirname } from 'path';
-import { cwd, stdout } from 'process';
+import { cwd, stdout as output } from 'process';
 import { EOL } from 'os';
 
 export const getFullName = (fileName, ...paths) => {
@@ -15,5 +15,5 @@ export const getUsername = () => {
 };
 
 export const writeInviteMessage = () => {
-  stdout.write(`${EOL}You are currently in ${cwd()}${EOL}> `);
+  output.write(`${EOL}You are currently in ${cwd()}${EOL}> `);
 };

@@ -1,18 +1,19 @@
-import { exit, stdout, stderr } from 'process';
+import { exit, stdout as output, stderr as errOutput } from 'process';
 import { EOL } from 'os';
 import { Transform } from 'stream';
 
 import { writeInviteMessage } from './utils.js';
 import { commandCode } from './const.js';
-import { up } from './navigation.js';
+import { up, cd } from './navigation.js';
 
 export const commandHandler = new Transform({
   transform(chunk, encoding, callback) {
-    const command = chunk.toString().replace(EOL, '').toUpperCase();
+    const userInput = chunk.toString().replace(EOL, '');
+    const [command, ...args] = userInput.split(' ');
 
-    stdout.write(`command is ${command}${EOL}`);
+    output.write(`command is ${command}, args is ${args}${EOL}`);
 
-    switch (command) {
+    switch (command.toUpperCase()) {
       case commandCode.exit:
         exit();
 
@@ -20,8 +21,12 @@ export const commandHandler = new Transform({
         up();
         break;
 
+      case commandCode.cd:
+        cd(...args);
+        break;
+
       default:
-        stdout.write(`Invalid input${EOL}`);
+        output.write(`Invalid input${EOL}`);
         break;
     }
 
