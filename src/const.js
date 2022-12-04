@@ -4,4 +4,5 @@ export const errorCode = {
 
 export const commandCode = {
   exit: '.EXIT',
+  up: 'UP',
 };

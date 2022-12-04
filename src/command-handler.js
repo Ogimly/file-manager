@@ -4,6 +4,7 @@ import { Transform } from 'stream';
 
 import { writeInviteMessage } from './utils.js';
 import { commandCode } from './const.js';
+import { up } from './navigation.js';
 
 export const commandHandler = new Transform({
   transform(chunk, encoding, callback) {
@@ -14,6 +15,14 @@ export const commandHandler = new Transform({
     switch (command) {
       case commandCode.exit:
         exit();
+
+      case commandCode.up:
+        up();
+        break;
+
+      default:
+        stdout.write(`Invalid input${EOL}`);
+        break;
     }
 
     writeInviteMessage();
