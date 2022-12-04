@@ -1,9 +1,10 @@
-import { chdir, cwd, env, exit, stdout, stderr } from 'process';
+import { chdir, env, exit, stdin, stdout, stderr } from 'process';
 import { EOL, homedir } from 'os';
-import { Transform, pipeline } from 'stream';
+import { pipeline } from 'stream';
 
-import { getUsername } from './src/utils.js';
+import { getUsername, writeInviteMessage } from './src/utils.js';
 import { errorCode } from './src/const.js';
+import { commandHandler } from './src/command-handler.js';
 
 const start = () => {
   try {
@@ -16,29 +17,9 @@ const start = () => {
     chdir(homedir());
 
     stdout.write(EOL + `Welcome to the File Manager, ${env.username}!${EOL}`);
-    stdout.write(`You are currently in ${cwd()}${EOL}`);
+    writeInviteMessage();
 
-    const mainProcess = new Transform({
-      transform(chunk, encoding, callback) {
-        const command = chunk.toString().replace(EOL, '');
-
-        stdout.write(`command is ${command}${EOL}`);
-
-        switch (command) {
-          case '.exit':
-            stdout.write(
-              `Thank you for using File Manager, ${env.username}, goodbye!${EOL}`
-            );
-            process.exit(0);
-        }
-
-        stdout.write(`You are currently in ${cwd()}${EOL}`);
-
-        callback();
-      },
-    });
-
-    pipeline(process.stdin, mainProcess, process.stdout, (error) => {
+    pipeline(stdin, commandHandler, stdout, (error) => {
       if (error) {
         stderr.write(`Operation failed: ${error}${EOL}`);
       }
