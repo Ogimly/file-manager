@@ -1,0 +1,22 @@
+{
+  "name": "file-manager",
+  "version": "1.0.0",
+  "description": "rss node.js week 2",
+  "type": "module",
+  "scripts": {
+    "start": "npm run start -- --username=ogimly"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ogimly/file-manager.git"
+  },
+  "keywords": [
+    "nodejs"
+  ],
+  "author": "ogimly",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ogimly/file-manager/issues"
+  },
+  "homepage": "https://github.com/ogimly/file-manager#readme"
+}
