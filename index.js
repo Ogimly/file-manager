@@ -19,10 +19,19 @@ const start = () => {
     stdout.write(EOL + `Welcome to the File Manager, ${env.username}!${EOL}`);
     writeInviteMessage();
 
+    // main event loop
     pipeline(stdin, commandHandler, stdout, (error) => {
       if (error) {
         stderr.write(`Operation failed: ${error}${EOL}`);
       }
+    });
+
+    // on exit
+    process.on('exit', () => {
+      stdout.write(`Thank you for using File Manager, ${env.username}, goodbye!${EOL}`);
+    });
+    process.on('SIGINT', () => {
+      exit();
     });
   } catch (error) {
     switch (error.message) {
@@ -31,7 +40,7 @@ const start = () => {
         break;
 
       default:
-        stderr.write(`${error}${EOL}`);
+        stderr.write(`Operation failed: ${error}${EOL}`);
         break;
     }
     exit();
