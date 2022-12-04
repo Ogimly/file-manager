@@ -3,7 +3,7 @@ import { stdin as input, stdout as output, stderr as errOutput } from 'process';
 import { EOL, homedir } from 'os';
 import { pipeline } from 'stream';
 
-import { getUsername, writeInviteMessage } from './src/utils.js';
+import { getUsername, writeInviteMessage, writeFailedMessage } from './src/utils.js';
 import { errorCode } from './src/const.js';
 import { commandHandler } from './src/command-handler.js';
 
@@ -23,7 +23,7 @@ const start = () => {
     // main event loop
     pipeline(input, commandHandler, output, (error) => {
       if (error) {
-        errOutput.write(`Operation failed: ${error}${EOL}`);
+        writeFailedMessage(error);
       }
     });
 
@@ -41,7 +41,7 @@ const start = () => {
         break;
 
       default:
-        errOutput.write(`Operation failed: ${error}${EOL}`);
+        writeFailedMessage(error);
         break;
     }
     exit();

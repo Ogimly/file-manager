@@ -8,3 +8,8 @@ export const commandCode = {
   up: 'UP',
   cd: 'CD',
 };
+
+export const invalidInput = {
+  unknownCommand: 'Invalid input: unknown command',
+  noUrl: 'Invalid input: path url needed',
+};

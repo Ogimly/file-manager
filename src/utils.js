@@ -1,5 +1,5 @@
 import path, { dirname } from 'path';
-import { cwd, stdout as output } from 'process';
+import { cwd, stdout as output, stderr as errOutput } from 'process';
 import { EOL } from 'os';
 
 export const getFullName = (fileName, ...paths) => {
@@ -16,4 +16,12 @@ export const getUsername = () => {
 
 export const writeInviteMessage = () => {
   output.write(`${EOL}You are currently in ${cwd()}${EOL}> `);
+};
+
+export const writeFailedMessage = (error) => {
+  errOutput.write(`Operation failed: ${error}${EOL}`);
+};
+
+export const writeInvalidInputMessage = (error) => {
+  errOutput.write(`${error}!${EOL}`);
 };

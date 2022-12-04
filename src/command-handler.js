@@ -2,8 +2,8 @@ import { exit, stdout as output, stderr as errOutput } from 'process';
 import { EOL } from 'os';
 import { Transform } from 'stream';
 
-import { writeInviteMessage } from './utils.js';
-import { commandCode } from './const.js';
+import { writeInviteMessage, writeInvalidInputMessage } from './utils.js';
+import { commandCode, invalidInput } from './const.js';
 import { up, cd } from './navigation.js';
 
 export const commandHandler = new Transform({
@@ -26,7 +26,7 @@ export const commandHandler = new Transform({
         break;
 
       default:
-        output.write(`Invalid input${EOL}`);
+        writeInvalidInputMessage(invalidInput.unknownCommand);
         break;
     }
 
