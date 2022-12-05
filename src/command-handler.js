@@ -1,14 +1,30 @@
+import { up, cd, ls } from './navigation.js';
+import { eol, cpus, homedir, username, architecture } from './operating-system.js';
+import { hash } from './hash-calculation.js';
 import { EOL } from 'os';
 
-import { writeInviteMessage, writeInvalidInputMessage } from './utils.js';
-import { output, FileManagerHandlers, invalidInput } from './const.js';
+import { writeMessage, writeInviteMessage, writeInvalidInputMessage } from './utils.js';
+import { invalidInput } from './const.js';
+
+const FileManagerHandlers = [
+  { command: '.EXIT', handler: process.exit },
+  { command: 'UP', handler: up },
+  { command: 'CD', handler: cd },
+  { command: 'LS', handler: ls },
+  { command: '--EOL', handler: eol },
+  { command: '--CPUS', handler: cpus },
+  { command: '--HOMEDIR', handler: homedir },
+  { command: '--USERNAME', handler: username },
+  { command: '--ARCHITECTURE', handler: architecture },
+  { command: 'HASH', handler: hash },
+];
 
 export const commandHandler = async (input) => {
   const userInput = input.trim().toString().replace(EOL, '');
   const [userCommand, ...args] = userInput.split(' ');
 
   const command = userCommand.toUpperCase();
-  output.write(`command is ${command}, args is ["${args.join('", "')}"]${EOL}`);
+  writeMessage(`command is ${command}, args is ["${args.join('", "')}"]`);
 
   const filteredHandler = FileManagerHandlers.filter(
     (handler) => handler.command === command

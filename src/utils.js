@@ -15,6 +15,10 @@ export const getUsername = () => {
   return result;
 };
 
+export const writeMessage = (message) => {
+  output.write(`${message}${EOL}`);
+};
+
 export const writeInviteMessage = () => {
   output.write(`${EOL}You are currently in ${process.cwd()}${EOL}> `);
 };

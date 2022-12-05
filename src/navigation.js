@@ -42,6 +42,7 @@ const sortBy = (a, b, key) => {
 export const ls = async () => {
   try {
     const fullName = process.cwd();
+    console.log(fullName);
 
     const files = (await readdir(fullName, { withFileTypes: true }))
       .map((file) => ({

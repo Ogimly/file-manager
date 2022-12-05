@@ -1,8 +1,8 @@
 import { readFile } from 'fs/promises';
 import { createHash } from 'crypto';
 
-import { output, errorCode, invalidInput } from './const.js';
-import { writeInvalidInputMessage, writeFailedMessage } from './utils.js';
+import { errorCode, invalidInput } from './const.js';
+import { writeMessage, writeInvalidInputMessage, writeFailedMessage } from './utils.js';
 
 export const hash = async (path) => {
   try {
@@ -10,7 +10,7 @@ export const hash = async (path) => {
 
     const content = await readFile(path);
 
-    output.write(`Hash: ${createHash('sha256').update(content).digest('hex')}`);
+    writeMessage(`Hash: ${createHash('sha256').update(content).digest('hex')}`);
   } catch (error) {
     switch (error.message) {
       case errorCode.noUrl:
