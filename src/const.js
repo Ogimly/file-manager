@@ -3,6 +3,7 @@ export { input, output, errOutput };
 
 import { up, cd, ls } from './navigation.js';
 import { eol, cpus, homedir, username, architecture } from './operating-system.js';
+import { hash } from './hash-calculation.js';
 
 export const FileManagerHandlers = [
   { command: '.EXIT', handler: process.exit },
@@ -14,6 +15,7 @@ export const FileManagerHandlers = [
   { command: '--HOMEDIR', handler: homedir },
   { command: '--USERNAME', handler: username },
   { command: '--ARCHITECTURE', handler: architecture },
+  { command: 'HASH', handler: hash },
 ];
 
 export const errorCode = {

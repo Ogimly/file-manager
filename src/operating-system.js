@@ -31,6 +31,7 @@ export const homedir = () => {
     writeFailedMessage(error);
   }
 };
+
 export const username = () => {
   try {
     output.write(`Current system user name: ${userInfo().username}`);
@@ -38,6 +39,7 @@ export const username = () => {
     writeFailedMessage(error);
   }
 };
+
 export const architecture = () => {
   try {
     output.write(`CPU architecture: ${arch()}`);
