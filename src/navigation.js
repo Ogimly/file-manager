@@ -1,19 +1,18 @@
-import { chdir, cwd } from 'process';
 import { parse } from 'path';
-import { EOL } from 'os';
 
 import { errorCode, invalidInput } from './const.js';
 import { writeFailedMessage, writeInvalidInputMessage } from './utils.js';
 
 export const up = () => {
-  if (parse(cwd()).root !== cwd()) chdir('../');
+  const cwd = process.cwd();
+  if (parse(cwd).root !== cwd) process.chdir('../');
 };
 
 export const cd = (path) => {
   try {
     if (!path) throw new Error(errorCode.noUrl);
 
-    chdir(path);
+    process.chdir(path);
   } catch (error) {
     switch (error.message) {
       case errorCode.noUrl:

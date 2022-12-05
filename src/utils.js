@@ -1,6 +1,7 @@
 import path, { dirname } from 'path';
-import { cwd, stdout as output, stderr as errOutput } from 'process';
 import { EOL } from 'os';
+
+import { output, errOutput } from './const.js';
 
 export const getFullName = (fileName, ...paths) => {
   const __dirname = dirname(fileName);
@@ -15,7 +16,7 @@ export const getUsername = () => {
 };
 
 export const writeInviteMessage = () => {
-  output.write(`${EOL}You are currently in ${cwd()}${EOL}> `);
+  output.write(`${EOL}You are currently in ${process.cwd()}${EOL}> `);
 };
 
 export const writeFailedMessage = (error) => {

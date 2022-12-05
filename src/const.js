@@ -1,3 +1,6 @@
+import { stdin as input, stdout as output, stderr as errOutput } from 'process';
+export { input, output, errOutput };
+
 export const errorCode = {
   noUser: 'noUser',
   noUrl: 'noUrl',
