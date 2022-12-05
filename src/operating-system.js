@@ -1,48 +1,65 @@
-import { EOL, cpus as osCPUs, homedir as osHomedir, userInfo, arch } from 'os';
+import { EOL, cpus, homedir, userInfo, arch } from 'os';
 
-import { writeMessage, writeFailedMessage } from './utils.js';
+import { errorCode, invalidInput } from './const.js';
+import { writeMessage, writeFailedMessage, writeInvalidInputMessage } from './utils.js';
 
-export const eol = () => {
+const CPUArray = () =>
+  cpus().map(({ model, speed }) => ({
+    Model: model,
+    Speed: `${speed / 1000}GHz`,
+  }));
+
+const parameterData = [
+  {
+    parameter: 'EOL',
+    data: { message: `EOL (default system End-Of-Line): ${JSON.stringify(EOL)}` },
+  },
+  {
+    parameter: 'CPUS',
+    data: {
+      message: `Overall amount of CPUs: ${CPUArray().length}`,
+      table: CPUArray(),
+    },
+  },
+  { parameter: 'HOMEDIR', data: { message: `Home directory: ${homedir()}` } },
+  {
+    parameter: 'USERNAME',
+    data: { message: `Current system user name: ${userInfo().username}` },
+  },
+  { parameter: 'ARCHITECTURE', data: { message: `CPU architecture: ${arch()}` } },
+];
+
+export const os = (parameter) => {
   try {
-    writeMessage(`EOL (default system End-Of-Line): ${JSON.stringify(EOL)}`);
-  } catch (error) {
-    writeFailedMessage(error);
-  }
-};
+    if (!parameter) throw new Error(errorCode.noParameter);
 
-export const cpus = () => {
-  try {
-    const CPUArray = osCPUs().map(({ model, speed }) => ({
-      Model: model,
-      Speed: `${speed / 1000}GHz`,
-    }));
-    writeMessage(`Overall amount of CPUs: ${CPUArray.length}`);
-    console.table(CPUArray);
-  } catch (error) {
-    writeFailedMessage(error);
-  }
-};
+    if (parameter.slice(0, 2) !== '--') throw new Error(errorCode.unknownParameter);
 
-export const homedir = () => {
-  try {
-    writeMessage(`Home directory: ${osHomedir()}`);
-  } catch (error) {
-    writeFailedMessage(error);
-  }
-};
+    const slicedParameter = parameter.slice(2).toUpperCase();
 
-export const username = () => {
-  try {
-    writeMessage(`Current system user name: ${userInfo().username}`);
-  } catch (error) {
-    writeFailedMessage(error);
-  }
-};
+    const filteredData = parameterData.filter(
+      (data) => data.parameter === slicedParameter
+    );
 
-export const architecture = () => {
-  try {
-    writeMessage(`CPU architecture: ${arch()}`);
+    if (filteredData.length === 0) throw new Error(errorCode.unknownParameter);
+
+    const { message, table } = filteredData[0].data;
+
+    writeMessage(message);
+    if (table) console.table(table);
   } catch (error) {
-    writeFailedMessage(error);
+    switch (error.message) {
+      case errorCode.noParameter:
+        writeInvalidInputMessage(invalidInput.noParameter);
+        break;
+
+      case errorCode.unknownParameter:
+        writeInvalidInputMessage(invalidInput.unknownParameter);
+        break;
+
+      default:
+        writeFailedMessage(error);
+        break;
+    }
   }
 };

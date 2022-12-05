@@ -1,7 +1,10 @@
 import path, { dirname } from 'path';
 import { EOL } from 'os';
 
-import { output, errOutput } from './const.js';
+import { stdin as input, stdout as output, stderr as errOutput } from 'process';
+export { input, output, errOutput };
+
+export const IO = { input, output };
 
 export const getFullName = (fileName, ...paths) => {
   const __dirname = dirname(fileName);

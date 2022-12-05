@@ -1,5 +1,5 @@
 import { up, cd, ls } from './navigation.js';
-import { eol, cpus, homedir, username, architecture } from './operating-system.js';
+import { os } from './operating-system.js';
 import { hash } from './hash-calculation.js';
 import { EOL } from 'os';
 
@@ -11,11 +11,7 @@ const FileManagerHandlers = [
   { command: 'UP', handler: up },
   { command: 'CD', handler: cd },
   { command: 'LS', handler: ls },
-  { command: '--EOL', handler: eol },
-  { command: '--CPUS', handler: cpus },
-  { command: '--HOMEDIR', handler: homedir },
-  { command: '--USERNAME', handler: username },
-  { command: '--ARCHITECTURE', handler: architecture },
+  { command: 'OS', handler: os },
   { command: 'HASH', handler: hash },
 ];
 

@@ -2,7 +2,7 @@ import { homedir } from 'os';
 import readline from 'readline';
 
 import * as utils from './src/utils.js';
-import { input, output, errorCode, invalidInput } from './src/const.js';
+import { errorCode, invalidInput } from './src/const.js';
 import { commandHandler } from './src/command-handler.js';
 
 const start = () => {
@@ -19,7 +19,7 @@ const start = () => {
     utils.writeInviteMessage();
 
     // main event loop
-    const interfaceIO = readline.createInterface({ input, output });
+    const interfaceIO = readline.createInterface(utils.IO);
     interfaceIO.on('line', commandHandler);
     interfaceIO.on('error', utils.writeFailedMessage);
 
