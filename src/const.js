@@ -1,18 +1,20 @@
 import { stdin as input, stdout as output, stderr as errOutput } from 'process';
 export { input, output, errOutput };
 
+import { up, cd } from './navigation.js';
+
+export const FileManagerHandlers = [
+  { command: '.EXIT', handler: process.exit },
+  { command: 'UP', handler: up },
+  { command: 'CD', handler: cd },
+];
+
 export const errorCode = {
   noUser: 'noUser',
   noUrl: 'noUrl',
 };
 
-export const commandCode = {
-  exit: '.EXIT',
-  up: 'UP',
-  cd: 'CD',
-};
-
 export const invalidInput = {
-  unknownCommand: 'Invalid input: unknown command',
-  noUrl: 'Invalid input: path url needed',
+  unknownCommand: 'unknown command',
+  noUrl: 'path url needed',
 };

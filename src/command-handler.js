@@ -1,30 +1,21 @@
 import { EOL } from 'os';
 
 import { writeInviteMessage, writeInvalidInputMessage } from './utils.js';
-import { input, output, errOutput, commandCode, invalidInput } from './const.js';
-import { up, cd } from './navigation.js';
+import { output, FileManagerHandlers, invalidInput } from './const.js';
 
 export const commandHandler = (input) => {
-  const userInput = input.toString().replace(EOL, '');
-  const [command, ...args] = userInput.split(' ');
+  const userInput = input.trim().toString().replace(EOL, '');
+  const [userCommand, ...args] = userInput.split(' ');
 
-  output.write(`command is ${command}, args is ${args}${EOL}`);
+  const command = userCommand.toUpperCase();
+  output.write(`command is ${command}, args is ["${args.join('", "')}"]${EOL}`);
 
-  switch (command.toUpperCase()) {
-    case commandCode.exit:
-      process.exit();
+  const handler = FileManagerHandlers.filter((handler) => handler.command === command);
 
-    case commandCode.up:
-      up();
-      break;
-
-    case commandCode.cd:
-      cd(...args);
-      break;
-
-    default:
-      writeInvalidInputMessage(invalidInput.unknownCommand);
-      break;
+  if (handler.length) {
+    handler[0].handler(...args);
+  } else {
+    writeInvalidInputMessage(invalidInput.unknownCommand);
   }
 
   writeInviteMessage();

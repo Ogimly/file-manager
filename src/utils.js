@@ -24,5 +24,5 @@ export const writeFailedMessage = (error) => {
 };
 
 export const writeInvalidInputMessage = (error) => {
-  errOutput.write(`${error}!${EOL}`);
+  errOutput.write(`Invalid input: ${error}${EOL}`);
 };
