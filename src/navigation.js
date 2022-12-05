@@ -1,4 +1,4 @@
-import { parse } from 'path';
+import { parse, sep } from 'path';
 import { readdir } from 'fs/promises';
 
 import { errorCode, invalidInput } from './const.js';
@@ -12,6 +12,8 @@ export const up = () => {
 export const cd = (path) => {
   try {
     if (!path) throw new Error(errorCode.noUrl);
+
+    if (path.slice(-1) !== sep) path += sep;
 
     process.chdir(path);
   } catch (error) {
