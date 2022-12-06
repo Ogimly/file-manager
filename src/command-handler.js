@@ -1,6 +1,7 @@
 import { up, cd, ls } from './navigation.js';
 import { os } from './operating-system.js';
 import { hash } from './hash-calculation.js';
+import { compress, decompress } from './compression.js';
 import { EOL } from 'os';
 
 import { writeMessage, writeInviteMessage, writeInvalidInputMessage } from './utils.js';
@@ -13,6 +14,8 @@ const FileManagerHandlers = [
   { command: 'LS', handler: ls },
   { command: 'OS', handler: os },
   { command: 'HASH', handler: hash },
+  { command: 'COMPRESS', handler: compress },
+  { command: 'DECOMPRESS', handler: decompress },
 ];
 
 export const commandHandler = async (input) => {
