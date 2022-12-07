@@ -41,9 +41,17 @@ export const commandHandler = async (input) => {
     try {
       await handler(...args);
     } catch (error) {
-      switch (error) {
+      switch (error.message) {
         case errorCode.noUrl:
           writeInvalidInputMessage(invalidInput.noUrl);
+          break;
+
+        case errorCode.noParameter:
+          writeInvalidInputMessage(invalidInput.noParameter);
+          break;
+
+        case errorCode.unknownParameter:
+          writeInvalidInputMessage(invalidInput.unknownParameter);
           break;
 
         default:

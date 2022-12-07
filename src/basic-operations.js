@@ -4,9 +4,9 @@ import { finished } from 'stream';
 import { errorCode } from './const.js';
 import { writeMessage } from './utils.js';
 
-export const cat = (path) => {
-  return new Promise((resolve, reject) => {
-    if (!path) reject(errorCode.noUrl);
+export const cat = (path) =>
+  new Promise((resolve, reject) => {
+    if (!path) reject(new Error(errorCode.noUrl));
 
     const readStream = createReadStream(path, 'utf-8');
     readStream.on('data', (chunk) => {
@@ -22,4 +22,3 @@ export const cat = (path) => {
       }
     });
   });
-};
