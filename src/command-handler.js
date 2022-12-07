@@ -2,7 +2,7 @@ import { up, cd, ls } from './navigation.js';
 import { os } from './operating-system.js';
 import { hash } from './hash-calculation.js';
 import { compress, decompress } from './compression.js';
-import { cat } from './basic-operations.js';
+import { cat, add } from './basic-operations.js';
 import { EOL } from 'os';
 
 import * as utils from './utils.js';
@@ -18,6 +18,7 @@ const FileManagerHandlers = [
   { command: 'COMPRESS', handler: compress },
   { command: 'DECOMPRESS', handler: decompress },
   { command: 'CAT', handler: cat },
+  { command: 'ADD', handler: add },
 ];
 
 export const commandHandler = async (input) => {
@@ -36,22 +37,12 @@ export const commandHandler = async (input) => {
     try {
       await handler(...args);
     } catch (error) {
-      switch (error.message) {
-        case errorCode.noUrl:
-          utils.writeInvalidInputMessage(invalidInput.noUrl);
-          break;
+      const message = invalidInput[error.message];
 
-        case errorCode.noParameter:
-          utils.writeInvalidInputMessage(invalidInput.noParameter);
-          break;
-
-        case errorCode.unknownParameter:
-          utils.writeInvalidInputMessage(invalidInput.unknownParameter);
-          break;
-
-        default:
-          utils.writeFailedMessage(error);
-          break;
+      if (message) {
+        utils.writeInvalidInputMessage(message);
+      } else {
+        utils.writeFailedMessage(error);
       }
     }
   } else {
