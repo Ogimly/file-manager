@@ -2,10 +2,16 @@ import { up, cd, ls } from './navigation.js';
 import { os } from './operating-system.js';
 import { hash } from './hash-calculation.js';
 import { compress, decompress } from './compression.js';
+import { cat } from './basic-operations.js';
 import { EOL } from 'os';
 
-import { writeMessage, writeInviteMessage, writeInvalidInputMessage } from './utils.js';
-import { invalidInput } from './const.js';
+import {
+  writeMessage,
+  writeInviteMessage,
+  writeInvalidInputMessage,
+  writeFailedMessage,
+} from './utils.js';
+import { errorCode, invalidInput } from './const.js';
 
 const FileManagerHandlers = [
   { command: '.EXIT', handler: process.exit },
@@ -16,6 +22,7 @@ const FileManagerHandlers = [
   { command: 'HASH', handler: hash },
   { command: 'COMPRESS', handler: compress },
   { command: 'DECOMPRESS', handler: decompress },
+  { command: 'CAT', handler: cat },
 ];
 
 export const commandHandler = async (input) => {
@@ -31,7 +38,19 @@ export const commandHandler = async (input) => {
 
   if (filteredHandler.length) {
     const handler = filteredHandler[0].handler;
-    await handler(...args);
+    try {
+      await handler(...args);
+    } catch (error) {
+      switch (error) {
+        case errorCode.noUrl:
+          writeInvalidInputMessage(invalidInput.noUrl);
+          break;
+
+        default:
+          writeFailedMessage(error);
+          break;
+      }
+    }
   } else {
     writeInvalidInputMessage(invalidInput.unknownCommand);
   }
