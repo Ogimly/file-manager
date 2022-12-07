@@ -5,12 +5,7 @@ import { compress, decompress } from './compression.js';
 import { cat } from './basic-operations.js';
 import { EOL } from 'os';
 
-import {
-  writeMessage,
-  writeInviteMessage,
-  writeInvalidInputMessage,
-  writeFailedMessage,
-} from './utils.js';
+import * as utils from './utils.js';
 import { errorCode, invalidInput } from './const.js';
 
 const FileManagerHandlers = [
@@ -30,7 +25,7 @@ export const commandHandler = async (input) => {
   const [userCommand, ...args] = userInput.split(' ');
 
   const command = userCommand.toUpperCase();
-  writeMessage(`command is ${command}, args is ["${args.join('", "')}"]`);
+  utils.writeMessage(`command is ${command}, args is ["${args.join('", "')}"]`);
 
   const filteredHandler = FileManagerHandlers.filter(
     (handler) => handler.command === command
@@ -43,25 +38,25 @@ export const commandHandler = async (input) => {
     } catch (error) {
       switch (error.message) {
         case errorCode.noUrl:
-          writeInvalidInputMessage(invalidInput.noUrl);
+          utils.writeInvalidInputMessage(invalidInput.noUrl);
           break;
 
         case errorCode.noParameter:
-          writeInvalidInputMessage(invalidInput.noParameter);
+          utils.writeInvalidInputMessage(invalidInput.noParameter);
           break;
 
         case errorCode.unknownParameter:
-          writeInvalidInputMessage(invalidInput.unknownParameter);
+          utils.writeInvalidInputMessage(invalidInput.unknownParameter);
           break;
 
         default:
-          writeFailedMessage(error);
+          utils.writeFailedMessage(error);
           break;
       }
     }
   } else {
-    writeInvalidInputMessage(invalidInput.unknownCommand);
+    utils.writeInvalidInputMessage(invalidInput.unknownCommand);
   }
 
-  writeInviteMessage();
+  utils.writeInviteMessage();
 };
