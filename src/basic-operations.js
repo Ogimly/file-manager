@@ -1,15 +1,16 @@
 import { createReadStream, createWriteStream } from 'fs';
+import { rename } from 'fs/promises';
 import { finished } from 'stream';
-import path from 'path';
+import path, { basename } from 'path';
 
 import { errorCode } from './const.js';
 import { writeMessage } from './utils.js';
 
-export const cat = (path) =>
+export const cat = (pathToFile) =>
   new Promise((resolve, reject) => {
-    if (!path) reject(new Error(errorCode.noUrl));
+    if (!pathToFile) reject(new Error(errorCode.noUrl));
 
-    const readStream = createReadStream(path, 'utf-8');
+    const readStream = createReadStream(pathToFile, 'utf-8');
     readStream.on('data', (chunk) => {
       writeMessage(chunk.toString());
     });
@@ -18,7 +19,7 @@ export const cat = (path) =>
       if (error) {
         reject(error);
       } else {
-        writeMessage(`"${path}" read`);
+        writeMessage(`"${pathToFile}" read`);
         resolve();
       }
     });
@@ -41,3 +42,14 @@ export const add = (fileName) =>
 
     writeStream.close();
   });
+
+export const rn = async (pathToFile, fileName) => {
+  if (!pathToFile) throw new Error(errorCode.noUrl);
+  if (!fileName) throw new Error(errorCode.noFileName);
+
+  const oldName = basename(pathToFile);
+
+  await rename(pathToFile, pathToFile.replace(oldName, fileName));
+
+  writeMessage(`"${oldName}" renamed to "${fileName}"`);
+};

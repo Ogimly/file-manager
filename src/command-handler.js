@@ -2,11 +2,11 @@ import { up, cd, ls } from './navigation.js';
 import { os } from './operating-system.js';
 import { hash } from './hash-calculation.js';
 import { compress, decompress } from './compression.js';
-import { cat, add } from './basic-operations.js';
+import { cat, add, rn } from './basic-operations.js';
 import { EOL } from 'os';
 
 import * as utils from './utils.js';
-import { errorCode, invalidInput } from './const.js';
+import { invalidInput } from './const.js';
 
 const FileManagerHandlers = [
   { command: '.EXIT', handler: process.exit },
@@ -19,6 +19,7 @@ const FileManagerHandlers = [
   { command: 'DECOMPRESS', handler: decompress },
   { command: 'CAT', handler: cat },
   { command: 'ADD', handler: add },
+  { command: 'RN', handler: rn },
 ];
 
 export const commandHandler = async (input) => {
