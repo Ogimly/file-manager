@@ -3,73 +3,57 @@ import { createReadStream, createWriteStream } from 'fs';
 import { pipeline, finished } from 'stream';
 import { createBrotliCompress, createBrotliDecompress } from 'zlib';
 
-import { errorCode, invalidInput } from './const.js';
-import { writeMessage, writeInvalidInputMessage, writeFailedMessage } from './utils.js';
+import { errorCode } from './const.js';
+import { writeMessage } from './utils.js';
 
-export const compress = (pathSrc, pathDest) => {
-  try {
-    if (!pathSrc || !pathDest) throw new Error(errorCode.noUrl);
+export const compress = (pathSrc, pathDest) =>
+  new Promise((resolve, reject) => {
+    if (!pathSrc || !pathDest) {
+      reject(new Error(errorCode.noUrl));
+    } else {
+      const readStream = createReadStream(pathSrc);
+      const writeStream = createWriteStream(pathDest);
+      const zip = createBrotliCompress();
 
-    const readStream = createReadStream(pathSrc);
-    const writeStream = createWriteStream(pathDest);
-    const zip = createBrotliCompress();
+      pipeline(readStream, zip, writeStream, (error) => {
+        if (error) {
+          reject(error);
+        }
+      });
 
-    pipeline(readStream, zip, writeStream, (error) => {
-      if (error) {
-        writeMessage(`error on compressing: ${error}`);
-      }
-    });
-
-    finished(readStream, async (error) => {
-      if (error) {
-        await rm(pathDest, { force: true });
-      } else {
-        writeMessage(`"${pathSrc}" compressed to "${pathDest}"`);
-      }
-    });
-  } catch (error) {
-    switch (error.message) {
-      case errorCode.noUrl:
-        writeInvalidInputMessage(invalidInput.noUrl);
-        break;
-
-      default:
-        writeFailedMessage(error);
-        break;
+      finished(readStream, (error) => {
+        if (error) {
+          reject(error);
+        } else {
+          writeMessage(`"${pathSrc}" compressed to "${pathDest}"`);
+          resolve();
+        }
+      });
     }
-  }
-};
+  });
 
-export const decompress = (pathSrc, pathDest) => {
-  try {
-    if (!pathSrc || !pathDest) throw new Error(errorCode.noUrl);
+export const decompress = (pathSrc, pathDest) =>
+  new Promise((resolve, reject) => {
+    if (!pathSrc || !pathDest) {
+      reject(new Error(errorCode.noUrl));
+    } else {
+      const readStream = createReadStream(pathSrc);
+      const writeStream = createWriteStream(pathDest);
+      const unzip = createBrotliDecompress();
 
-    const readStream = createReadStream(pathSrc);
-    const writeStream = createWriteStream(pathDest);
-    const unzip = createBrotliDecompress();
+      pipeline(readStream, unzip, writeStream, (error) => {
+        if (error) {
+          reject(error);
+        }
+      });
 
-    pipeline(readStream, unzip, writeStream, (error) => {
-      if (error) {
-        writeMessage(`error on decompressing: ${error}`);
-      }
-    });
-
-    finished(readStream, async (error) => {
-      if (error) {
-        await rm(pathDest, { force: true });
-      } else {
-        writeMessage(`"${pathSrc}" decompressed to "${pathDest}"`);
-      }
-    });
-  } catch (error) {
-    switch (error.message) {
-      case errorCode.noUrl:
-        writeInvalidInputMessage(invalidInput.noUrl);
-        break;
-
-      default:
-        writeFailedMessage(error);
-        break;
+      finished(readStream, (error) => {
+        if (error) {
+          reject(error);
+        } else {
+          writeMessage(`"${pathSrc}" decompressed to "${pathDest}"`);
+          resolve();
+        }
+      });
     }
-  }
-};
+  });
