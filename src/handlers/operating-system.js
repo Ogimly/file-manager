@@ -1,7 +1,7 @@
 import { EOL, cpus, homedir, userInfo, arch } from 'os';
 
-import { errorCode } from './const.js';
-import { writeMessage } from './utils.js';
+import { errorCode } from '../const.js';
+import { writeMessage } from '../utils/input-output.js';
 
 const parameterData = [
   {

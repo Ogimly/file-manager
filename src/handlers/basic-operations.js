@@ -3,8 +3,8 @@ import { rename, rm as fsRm } from 'fs/promises';
 import { finished, pipeline } from 'stream';
 import { join, basename } from 'path';
 
-import { errorCode } from './const.js';
-import { writeMessage } from './utils.js';
+import { errorCode } from '../const.js';
+import { writeMessage } from '../utils/input-output.js';
 
 export const cat = (pathToFile) =>
   new Promise((resolve, reject) => {

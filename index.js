@@ -1,13 +1,14 @@
 import { homedir } from 'os';
 import readline from 'readline';
 
-import * as utils from './src/utils.js';
+import * as IO from './src/utils/input-output.js';
+import { getUsername } from './src/utils/cli.js';
 import { errorCode, invalidInput } from './src/const.js';
 import { commandHandler } from './src/command-handler.js';
 
 const start = () => {
   try {
-    const username = utils.getUsername();
+    const username = getUsername();
     if (!username) {
       throw new Error(errorCode.noUser);
     }
@@ -15,17 +16,17 @@ const start = () => {
 
     process.chdir(homedir());
 
-    utils.writeMessage(`Welcome to the File Manager, ${process.env.username}!`);
-    utils.writeInviteMessage();
+    IO.writeMessage(`Welcome to the File Manager, ${process.env.username}!`);
+    IO.writeInviteMessage();
 
     // main event loop
-    const interfaceIO = readline.createInterface(utils.IO);
+    const interfaceIO = readline.createInterface(IO.interfaceIO);
     interfaceIO.on('line', commandHandler);
-    interfaceIO.on('error', utils.writeFailedMessage);
+    interfaceIO.on('error', IO.writeFailedMessage);
 
     // on exit
     process.on('exit', () => {
-      utils.writeMessage(
+      IO.writeMessage(
         `Thank you for using File Manager, ${process.env.username}, goodbye!`
       );
       interfaceIO.close();
@@ -34,11 +35,11 @@ const start = () => {
   } catch (error) {
     switch (error.message) {
       case errorCode.noUser:
-        utils.writeInvalidInputMessage(invalidInput.noUser);
+        IO.writeInvalidInputMessage(invalidInput.noUser);
         break;
 
       default:
-        utils.writeFailedMessage(error);
+        IO.writeFailedMessage(error);
         break;
     }
     process.exit();

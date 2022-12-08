@@ -1,10 +1,9 @@
-import { rm } from 'fs/promises';
 import { createReadStream, createWriteStream } from 'fs';
 import { pipeline, finished } from 'stream';
 import { createBrotliCompress, createBrotliDecompress } from 'zlib';
 
-import { errorCode } from './const.js';
-import { writeMessage } from './utils.js';
+import { errorCode } from '../const.js';
+import { writeMessage } from '../utils/input-output.js';
 
 export const compress = (pathSrc, pathDest) =>
   new Promise((resolve, reject) => {

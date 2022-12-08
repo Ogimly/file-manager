@@ -1,11 +1,11 @@
-import { up, cd, ls } from './navigation.js';
-import { os } from './operating-system.js';
-import { hash } from './hash-calculation.js';
-import { compress, decompress } from './compression.js';
-import { cat, add, rn, cp, rm, rv } from './basic-operations.js';
+import { up, cd, ls } from './handlers/navigation.js';
+import { os } from './handlers/operating-system.js';
+import { hash } from './handlers/hash-calculation.js';
+import { compress, decompress } from './handlers/compression.js';
+import { cat, add, rn, cp, rm, rv } from './handlers/basic-operations.js';
 import { EOL } from 'os';
 
-import * as utils from './utils.js';
+import * as IO from './utils/input-output.js';
 import { invalidInput } from './const.js';
 
 const FileManagerHandlers = [
@@ -30,7 +30,7 @@ export const commandHandler = async (input) => {
   const [userCommand, ...args] = userInput.split(' ');
 
   const command = userCommand.toUpperCase();
-  utils.writeMessage(`command is ${command}, args is ["${args.join('", "')}"]`);
+  IO.writeMessage(`command is ${command}, args is ["${args.join('", "')}"]`);
 
   const foundHandler = FileManagerHandlers.find((handler) => handler.command === command);
 
@@ -42,14 +42,14 @@ export const commandHandler = async (input) => {
       const message = invalidInput[error.message];
 
       if (message) {
-        utils.writeInvalidInputMessage(message);
+        IO.writeInvalidInputMessage(message);
       } else {
-        utils.writeFailedMessage(error);
+        IO.writeFailedMessage(error);
       }
     }
   } else {
-    utils.writeInvalidInputMessage(invalidInput.unknownCommand);
+    IO.writeInvalidInputMessage(invalidInput.unknownCommand);
   }
 
-  utils.writeInviteMessage();
+  IO.writeInviteMessage();
 };

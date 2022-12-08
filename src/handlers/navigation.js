@@ -1,7 +1,7 @@
 import { parse, sep } from 'path';
 import { readdir } from 'fs/promises';
 
-import { errorCode } from './const.js';
+import { errorCode } from '../const.js';
 
 export const up = () => {
   const cwd = process.cwd();
