@@ -2,7 +2,7 @@ import { up, cd, ls } from './navigation.js';
 import { os } from './operating-system.js';
 import { hash } from './hash-calculation.js';
 import { compress, decompress } from './compression.js';
-import { cat, add, rn } from './basic-operations.js';
+import { cat, add, rn, cp } from './basic-operations.js';
 import { EOL } from 'os';
 
 import * as utils from './utils.js';
@@ -20,6 +20,7 @@ const FileManagerHandlers = [
   { command: 'CAT', handler: cat },
   { command: 'ADD', handler: add },
   { command: 'RN', handler: rn },
+  { command: 'CP', handler: cp },
 ];
 
 export const commandHandler = async (input) => {
