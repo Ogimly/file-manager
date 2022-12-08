@@ -1,5 +1,5 @@
 import { createReadStream, createWriteStream } from 'fs';
-import { rename } from 'fs/promises';
+import { rename, rm as fsRm } from 'fs/promises';
 import { finished, pipeline } from 'stream';
 import { join, basename } from 'path';
 
@@ -87,3 +87,24 @@ export const cp = async (pathToFile, pathDest) =>
       });
     }
   });
+
+export const rm = async (pathToFile) => {
+  if (!pathToFile) throw new Error(errorCode.noUrl);
+
+  const fileName = basename(pathToFile);
+
+  await fsRm(pathToFile);
+
+  writeMessage(`"${fileName}" removed!`);
+};
+
+export const rv = async (pathToFile, pathDest) => {
+  if (!pathToFile || !pathDest) throw new Error(errorCode.noUrl);
+
+  try {
+    await cp(pathToFile, pathDest);
+    await rm(pathToFile);
+  } catch (error) {
+    throw error;
+  }
+};
