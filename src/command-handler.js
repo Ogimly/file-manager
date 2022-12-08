@@ -32,12 +32,10 @@ export const commandHandler = async (input) => {
   const command = userCommand.toUpperCase();
   utils.writeMessage(`command is ${command}, args is ["${args.join('", "')}"]`);
 
-  const filteredHandler = FileManagerHandlers.filter(
-    (handler) => handler.command === command
-  );
+  const foundHandler = FileManagerHandlers.find((handler) => handler.command === command);
 
-  if (filteredHandler.length) {
-    const handler = filteredHandler[0].handler;
+  if (foundHandler) {
+    const handler = foundHandler.handler;
     try {
       await handler(...args);
     } catch (error) {
