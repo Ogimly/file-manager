@@ -3,31 +3,27 @@ import { pipeline, finished } from 'stream';
 import { createBrotliCompress, createBrotliDecompress } from 'zlib';
 import { resolve as pathResolve } from 'path';
 
-import { errorCode } from '../const.js';
 import * as files from '../utils/files.js';
 import { writeMessage } from '../utils/input-output.js';
+import { errorCode } from '../const.js';
 
 const getPaths = async (pathSrc, pathDest, handlerExt) => {
-  if (!pathSrc) return { error: errorCode.noUrl };
+  let result = await files.checkAsFile(pathSrc);
+  if (result.error) return { error: errorCode.notFileSrc };
 
-  const pathToFileSrc = pathResolve(pathSrc);
-  const pathIsFileSrc = await files.isFile(pathToFileSrc);
-
-  if (!pathIsFileSrc) return { error: errorCode.notFileSrc };
+  const pathToFileSrc = result.pathToFile;
 
   let pathToFileDest;
 
   if (pathDest) {
-    const pathToDirectoryDest = pathResolve(pathDest);
-    const pathIsDirectoryDest = await files.isDirectory(pathToDirectoryDest);
-
-    if (!pathIsDirectoryDest) return { error: errorCode.notDirectoryDest };
+    result = await files.checkAsDirectory(pathDest);
+    if (result.error) return { error: errorCode.notDirectoryDest };
 
     const fileName = files.getFileName(pathToFileSrc);
 
     const newFileName = handlerExt(fileName, '.br');
 
-    pathToFileDest = pathResolve(pathToDirectoryDest, newFileName);
+    pathToFileDest = pathResolve(result.pathToDirectory, newFileName);
   } else {
     pathToFileDest = handlerExt(pathToFileSrc, '.br');
   }
@@ -38,7 +34,6 @@ const getPaths = async (pathSrc, pathDest, handlerExt) => {
 const handlerZlib = (pathSrc, pathDest, zlib, handlerExt, isCompress) =>
   new Promise(async (resolve, reject) => {
     const result = await getPaths(pathSrc, pathDest, handlerExt);
-
     if (result.error) {
       reject(new Error(result.error));
       return;

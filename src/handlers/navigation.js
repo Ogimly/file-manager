@@ -1,28 +1,19 @@
-import { parse, resolve, sep } from 'path';
 import { readdir } from 'fs/promises';
 
-import { errorCode } from '../const.js';
-import { isDirectory } from '../utils/files.js';
+import { getRoot, checkAsDirectory } from '../utils/files.js';
 
 export const up = () => {
   const cwd = process.cwd();
-  if (parse(cwd).root !== cwd) process.chdir('../');
+  if (getRoot(cwd) !== cwd) process.chdir('../');
 };
 
 export const cd = async (path) => {
-  if (!path) throw new Error(errorCode.noUrl);
+  const result = await checkAsDirectory(path);
+  if (result.error) {
+    throw new Error(result.error);
+  }
 
-  let pathToDirectory = path;
-
-  if (pathToDirectory.slice(-1) !== sep) pathToDirectory += sep;
-
-  pathToDirectory = resolve(pathToDirectory);
-
-  const pathIsDirectory = await isDirectory(pathToDirectory);
-
-  if (!pathIsDirectory) throw new Error(errorCode.notDirectory);
-
-  process.chdir(pathToDirectory);
+  process.chdir(result.pathToDirectory);
 };
 
 const sortBy = (a, b, key) => {

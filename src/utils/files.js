@@ -1,5 +1,7 @@
 import { stat } from 'fs/promises';
-import { basename } from 'path';
+import { basename, parse, resolve } from 'path';
+
+import { errorCode } from '../const.js';
 
 const checkPath = async (path, checkName) => {
   try {
@@ -13,12 +15,31 @@ const checkPath = async (path, checkName) => {
   }
 };
 
-export const isDirectory = async (path) => {
-  return checkPath(path, 'isDirectory');
+export const checkAsDirectory = async (path) => {
+  if (!path) return { error: errorCode.noUrl };
+
+  const pathToDirectory = resolve(path);
+
+  const pathIsDirectory = await checkPath(pathToDirectory, 'isDirectory');
+
+  if (!pathIsDirectory) return { error: errorCode.notDirectory };
+
+  return { pathToDirectory };
 };
 
-export const isFile = async (path) => {
-  return checkPath(path, 'isFile');
+export const checkAsFile = async (path) => {
+  if (!path) return { error: errorCode.noUrl };
+
+  const pathToFile = resolve(path);
+  const pathIsFile = await checkPath(pathToFile, 'isFile');
+
+  if (!pathIsFile) return { error: errorCode.notFile };
+
+  return { pathToFile };
+};
+
+export const getRoot = (path) => {
+  return parse(path).root;
 };
 
 export const getFileName = (path) => {

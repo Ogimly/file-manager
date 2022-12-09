@@ -1,28 +1,19 @@
 import { createReadStream } from 'fs';
 import { finished } from 'stream';
 import { createHash } from 'crypto';
-import { resolve as pathResolve } from 'path';
 
-import { errorCode } from '../const.js';
-import { isFile } from '../utils/files.js';
+import { checkAsFile } from '../utils/files.js';
 import { writeMessage } from '../utils/input-output.js';
 
 export const hash = async (path) =>
   new Promise(async (resolve, reject) => {
-    if (!path) {
-      reject(new Error(errorCode.noUrl));
+    const result = await checkAsFile(path);
+    if (result.error) {
+      reject(new Error(result.error));
       return;
     }
 
-    const pathToFile = pathResolve(path);
-    const pathIsFile = await isFile(pathToFile);
-
-    if (!pathIsFile) {
-      reject(new Error(errorCode.notFile));
-      return;
-    }
-
-    const readStream = createReadStream(pathToFile);
+    const readStream = createReadStream(result.pathToFile);
     const hash = readStream.pipe(createHash('sha256').setEncoding('hex'));
 
     hash.on('data', (chunk) => {
