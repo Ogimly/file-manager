@@ -3,10 +3,10 @@ import { os } from './handlers/operating-system.js';
 import { hash } from './handlers/hash-calculation.js';
 import { compress, decompress } from './handlers/compression.js';
 import { cat, add, rn, cp, rm, rv } from './handlers/basic-operations.js';
-import { EOL } from 'os';
 
 import * as IO from './utils/input-output.js';
 import { invalidInput } from './const.js';
+import { splitCommand } from './utils/strings.js';
 
 const FileManagerHandlers = [
   { command: '.EXIT', handler: process.exit },
@@ -26,29 +26,34 @@ const FileManagerHandlers = [
 ];
 
 export const commandHandler = async (input) => {
-  const userInput = input.trim().toString().replace(EOL, '');
-  const [userCommand, ...args] = userInput.split(' ');
+  const [userCommand, ...args] = splitCommand(input);
 
-  const command = userCommand.toUpperCase();
-  IO.writeMessage(`command is ${command}, args is ["${args.join('", "')}"]`);
+  if (userCommand) {
+    const command = userCommand.toUpperCase();
+    IO.writeMessage(`command is ${command}, args is ["${args.join('", "')}"]`);
 
-  const foundHandler = FileManagerHandlers.find((handler) => handler.command === command);
+    const foundHandler = FileManagerHandlers.find(
+      (handler) => handler.command === command
+    );
 
-  if (foundHandler) {
-    const handler = foundHandler.handler;
-    try {
-      await handler(...args);
-    } catch (error) {
-      const message = invalidInput[error.message];
+    if (foundHandler) {
+      const handler = foundHandler.handler;
+      try {
+        await handler(...args);
+      } catch (error) {
+        const message = invalidInput[error.message];
 
-      if (message) {
-        IO.writeInvalidInputMessage(message);
-      } else {
-        IO.writeFailedMessage(error);
+        if (message) {
+          IO.writeInvalidInputMessage(message);
+        } else {
+          IO.writeFailedMessage(error);
+        }
       }
+    } else {
+      IO.writeInvalidInputMessage(invalidInput.unknownCommand);
     }
   } else {
-    IO.writeInvalidInputMessage(invalidInput.unknownCommand);
+    IO.writeInvalidInputMessage(invalidInput.noCommand);
   }
 
   IO.writeInviteMessage();

@@ -7,6 +7,7 @@ export const errorCode = {
 };
 
 export const invalidInput = {
+  noCommand: 'command name needed',
   noUser: 'please enter your username (npm run start -- --username=your_username)',
   unknownCommand: 'unknown command',
   noUrl: 'path url needed',
