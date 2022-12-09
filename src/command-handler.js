@@ -4,9 +4,9 @@ import { hash } from './handlers/hash-calculation.js';
 import { compress, decompress } from './handlers/compression.js';
 import { cat, add, rn, cp, rm, rv } from './handlers/basic-operations.js';
 
-import * as IO from './utils/input-output.js';
+import { writeMessage, writeInviteMessage } from './utils/input-output.js';
+import { errorHandler } from './utils/error-handler.js';
 import { errorCode } from './const.js';
-import { invalidInput } from './const.js';
 import { splitCommand } from './utils/strings.js';
 
 const FileManagerHandlers = [
@@ -33,7 +33,7 @@ export const commandHandler = async (input) => {
     if (!userCommand) throw new Error(errorCode.noCommand);
 
     const command = userCommand.toUpperCase();
-    IO.writeMessage(`command is ${command}, args is ["${args.join('", "')}"]`);
+    writeMessage(`command is ${command}, args is ["${args.join('", "')}"]`);
 
     const foundHandler = FileManagerHandlers.find(
       (handler) => handler.command === command
@@ -43,14 +43,8 @@ export const commandHandler = async (input) => {
 
     await foundHandler.handler(...args);
   } catch (error) {
-    const message = invalidInput[error.message];
-
-    if (message) {
-      IO.writeInvalidInputMessage(message);
-    } else {
-      IO.writeFailedMessage(error);
-    }
+    errorHandler(error);
   }
 
-  IO.writeInviteMessage();
+  writeInviteMessage();
 };

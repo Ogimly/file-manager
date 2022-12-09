@@ -1,5 +1,5 @@
 import { stat } from 'fs/promises';
-import { basename, resolve } from 'path';
+import { basename } from 'path';
 
 const checkPath = async (path, checkName) => {
   try {

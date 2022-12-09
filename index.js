@@ -3,7 +3,8 @@ import readline from 'readline';
 
 import * as IO from './src/utils/input-output.js';
 import { getUsername } from './src/utils/cli.js';
-import { errorCode, invalidInput } from './src/const.js';
+import { errorHandler } from './src/utils/error-handler.js';
+import { errorCode } from './src/const.js';
 import { commandHandler } from './src/command-handler.js';
 
 const start = () => {
@@ -33,15 +34,8 @@ const start = () => {
     });
     process.on('SIGINT', () => process.exit());
   } catch (error) {
-    switch (error.message) {
-      case errorCode.noUser:
-        IO.writeInvalidInputMessage(invalidInput.noUser);
-        break;
+    errorHandler(error);
 
-      default:
-        IO.writeFailedMessage(error);
-        break;
-    }
     process.exit();
   }
 };
