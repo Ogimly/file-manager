@@ -1,5 +1,7 @@
 export const errorCode = {
+  noCommand: 'noCommand',
   noUser: 'noUser',
+  unknownCommand: 'unknownCommand',
   noUrl: 'noUrl',
   noFileName: 'noFileName',
   noParameter: 'noParameter',

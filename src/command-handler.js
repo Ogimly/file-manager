@@ -5,6 +5,7 @@ import { compress, decompress } from './handlers/compression.js';
 import { cat, add, rn, cp, rm, rv } from './handlers/basic-operations.js';
 
 import * as IO from './utils/input-output.js';
+import { errorCode } from './const.js';
 import { invalidInput } from './const.js';
 import { splitCommand } from './utils/strings.js';
 
@@ -26,9 +27,10 @@ const FileManagerHandlers = [
 ];
 
 export const commandHandler = async (input) => {
-  const [userCommand, ...args] = splitCommand(input);
+  try {
+    const [userCommand, ...args] = splitCommand(input);
 
-  if (userCommand) {
+    if (!userCommand) throw new Error(errorCode.noCommand);
     const command = userCommand.toUpperCase();
     IO.writeMessage(`command is ${command}, args is ["${args.join('", "')}"]`);
 
@@ -36,24 +38,17 @@ export const commandHandler = async (input) => {
       (handler) => handler.command === command
     );
 
-    if (foundHandler) {
-      const handler = foundHandler.handler;
-      try {
-        await handler(...args);
-      } catch (error) {
-        const message = invalidInput[error.message];
+    if (!foundHandler) throw new Error(errorCode.unknownCommand);
 
-        if (message) {
-          IO.writeInvalidInputMessage(message);
-        } else {
-          IO.writeFailedMessage(error);
-        }
-      }
+    await foundHandler.handler(...args);
+  } catch (error) {
+    const message = invalidInput[error.message];
+
+    if (message) {
+      IO.writeInvalidInputMessage(message);
     } else {
-      IO.writeInvalidInputMessage(invalidInput.unknownCommand);
+      IO.writeFailedMessage(error);
     }
-  } else {
-    IO.writeInvalidInputMessage(invalidInput.noCommand);
   }
 
   IO.writeInviteMessage();
