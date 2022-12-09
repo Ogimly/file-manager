@@ -20,7 +20,7 @@ export const cd = async (path) => {
 
   const pathIsDirectory = await isDirectory(pathToDirectory);
 
-  if (!pathIsDirectory) throw new Error(errorCode.noDirectory);
+  if (!pathIsDirectory) throw new Error(errorCode.notDirectory);
 
   process.chdir(pathToDirectory);
 };

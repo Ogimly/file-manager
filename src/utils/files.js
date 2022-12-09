@@ -1,21 +1,21 @@
 import { stat } from 'fs/promises';
 
-export const isDirectory = async (path) => {
+const checkPath = async (path, checkName) => {
   try {
     const statInfo = await stat(path);
 
-    return statInfo.isDirectory();
+    const check = statInfo[checkName].bind(statInfo);
+
+    return check();
   } catch (error) {
     return false;
   }
 };
 
-export const isFile = async (path) => {
-  try {
-    const statInfo = await stat(path);
+export const isDirectory = async (path) => {
+  return checkPath(path, 'isDirectory');
+};
 
-    return statInfo.isFile();
-  } catch (error) {
-    return false;
-  }
+export const isFile = async (path) => {
+  return checkPath(path, 'isFile');
 };
