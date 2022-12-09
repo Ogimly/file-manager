@@ -31,6 +31,7 @@ export const commandHandler = async (input) => {
     const [userCommand, ...args] = splitCommand(input);
 
     if (!userCommand) throw new Error(errorCode.noCommand);
+
     const command = userCommand.toUpperCase();
     IO.writeMessage(`command is ${command}, args is ["${args.join('", "')}"]`);
 
