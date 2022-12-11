@@ -15,16 +15,32 @@ const getPaths = async (pathSrc, pathDest, handlerExt) => {
 
   let pathToFileDest;
 
+  // try to understand what the user wants:
   if (pathDest) {
-    result = await files.checkAsDirectory(pathDest);
-    if (result.error) return { error: errorCode.notDirectoryDest };
+    result = await files.checkAsFile(pathDest);
+    if (result.error) {
+      result = await files.checkAsDirectory(pathDest);
+      if (result.error) {
+        // destination is new file
+        pathToFileDest = pathResolve(pathDest);
 
-    const fileName = files.getFileName(pathToFileSrc);
+        result = await files.checkAsDirectory(files.getDir(pathToFileDest));
+        // destination is not existing directory
+        if (result.error) return { error: errorCode.notDirectoryDest };
+      } else {
+        // destination is existing directory
+        const fileName = files.getFileName(pathToFileSrc);
 
-    const newFileName = handlerExt(fileName, '.br');
+        const newFileName = handlerExt(fileName, '.br');
 
-    pathToFileDest = pathResolve(result.pathToDirectory, newFileName);
+        pathToFileDest = pathResolve(result.pathToDirectory, newFileName);
+      }
+    } else {
+      // destination is existing file
+      pathToFileDest = result.pathToFile;
+    }
   } else {
+    // destination is empty
     pathToFileDest = handlerExt(pathToFileSrc, '.br');
   }
 

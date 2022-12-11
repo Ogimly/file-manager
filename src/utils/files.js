@@ -1,5 +1,5 @@
 import { stat } from 'fs/promises';
-import { basename, parse, resolve } from 'path';
+import { basename, parse, resolve, extname } from 'path';
 
 import { errorCode } from '../const.js';
 
@@ -42,6 +42,10 @@ export const getRoot = (path) => {
   return parse(path).root;
 };
 
+export const getDir = (path) => {
+  return parse(path).dir;
+};
+
 export const getFileName = (path) => {
   return basename(path);
 };
@@ -50,6 +54,13 @@ export const addExtension = (path, ext) => {
   return path + ext;
 };
 
-export const removeExtension = (path, ext) => {
-  return path.slice(0, path.lastIndexOf(ext));
+export const removeExtension = (path, fileExt) => {
+  const lastIndex = path.lastIndexOf(fileExt);
+  if (lastIndex === -1) {
+    const ext = extname(path);
+    if (ext === '') return path + '.txt';
+    return removeExtension(path, ext) + '.txt';
+  }
+
+  return path.slice(0, lastIndex);
 };
