@@ -124,7 +124,7 @@ export const rm = async (path) => {
   writeMessage(`"${fileName}" removed!`);
 };
 
-export const rv = async (pathToFile, pathDest) => {
+export const mv = async (pathToFile, pathDest) => {
   try {
     await cp(pathToFile, pathDest);
     await rm(pathToFile);

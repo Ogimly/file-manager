@@ -2,9 +2,9 @@ import { up, cd, ls } from './handlers/navigation.js';
 import { os } from './handlers/operating-system.js';
 import { hash } from './handlers/hash-calculation.js';
 import { compress, decompress } from './handlers/compression.js';
-import { cat, add, rn, cp, rm, rv } from './handlers/basic-operations.js';
+import { cat, add, rn, cp, rm, mv } from './handlers/basic-operations.js';
 
-import { writeMessage, writeInviteMessage } from './utils/input-output.js';
+import { writeInviteMessage } from './utils/input-output.js';
 import { errorHandler } from './utils/error-handler.js';
 import { errorCode } from './const.js';
 import { splitCommand } from './utils/strings.js';
@@ -23,7 +23,7 @@ const FileManagerHandlers = [
   { command: 'RN', handler: rn },
   { command: 'CP', handler: cp },
   { command: 'RM', handler: rm },
-  { command: 'RV', handler: rv },
+  { command: 'MV', handler: mv },
 ];
 
 export const commandHandler = async (input) => {
@@ -33,7 +33,6 @@ export const commandHandler = async (input) => {
     if (!userCommand) throw new Error(errorCode.noCommand);
 
     const command = userCommand.toUpperCase();
-    writeMessage(`command is ${command}, args is ["${args.join('", "')}"]`);
 
     const foundHandler = FileManagerHandlers.find(
       (handler) => handler.command === command

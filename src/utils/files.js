@@ -1,5 +1,5 @@
 import { stat } from 'fs/promises';
-import { basename, parse, resolve, extname } from 'path';
+import { basename, parse, resolve, extname, sep } from 'path';
 
 import { errorCode } from '../const.js';
 
@@ -18,7 +18,7 @@ const checkPath = async (path, checkName) => {
 export const checkAsDirectory = async (path) => {
   if (!path) return { error: errorCode.noUrl };
 
-  const pathToDirectory = resolve(path);
+  const pathToDirectory = resolve(path + sep);
 
   const pathIsDirectory = await checkPath(pathToDirectory, 'isDirectory');
 

@@ -15,7 +15,7 @@ const parameterData = [
     getData: () => {
       const CPUArray = cpus().map(({ model, speed }) => ({
         Model: model,
-        Speed: `${speed / 1000}GHz`,
+        Speed: `${speed / (arch() === 'arm64' ? 10 : 1000)}GHz`,
       }));
 
       return {
