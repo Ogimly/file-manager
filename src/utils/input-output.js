@@ -17,5 +17,5 @@ export const writeFailedMessage = (error) => {
 };
 
 export const writeInvalidInputMessage = (error) => {
-  errOutput.write(`Invalid input: ${error}${EOL}`);
+  errOutput.write(`Invalid input: ${error}${EOL}Type "help" to get command list${EOL}`);
 };

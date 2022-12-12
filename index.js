@@ -18,6 +18,7 @@ const start = () => {
     process.chdir(homedir());
 
     IO.writeMessage(`Welcome to the File Manager, ${process.env.username}!`);
+    IO.writeMessage(`Type "help" to get command list`);
     IO.writeInviteMessage();
 
     // main event loop

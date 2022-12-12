@@ -1,4 +1,4 @@
-import { up, cd, ls } from './handlers/navigation.js';
+import { up, cd, ls, help } from './handlers/navigation.js';
 import { os } from './handlers/operating-system.js';
 import { hash } from './handlers/hash-calculation.js';
 import { compress, decompress } from './handlers/compression.js';
@@ -11,6 +11,7 @@ import { splitCommand } from './utils/strings.js';
 
 const FileManagerHandlers = [
   { command: '.EXIT', handler: process.exit },
+  { command: 'HELP', handler: help },
   { command: 'UP', handler: up },
   { command: 'CD', handler: cd },
   { command: 'LS', handler: ls },
