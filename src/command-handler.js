@@ -4,7 +4,7 @@ import { hash } from './handlers/hash-calculation.js';
 import { compress, decompress } from './handlers/compression.js';
 import { cat, add, rn, cp, rm, mv } from './handlers/basic-operations.js';
 
-import { writeInviteMessage } from './utils/input-output.js';
+import { writeInviteMessage, writeLog } from './utils/input-output.js';
 import { errorHandler } from './utils/error-handler.js';
 import { errorCode } from './const.js';
 import { splitCommand } from './utils/strings.js';
@@ -29,11 +29,15 @@ const FileManagerHandlers = [
 
 export const commandHandler = async (input) => {
   try {
+    writeLog(input);
+
     const [userCommand, ...args] = splitCommand(input);
 
     if (!userCommand) throw new Error(errorCode.noCommand);
 
     const command = userCommand.toUpperCase();
+
+    writeLog(`command is ${command}, args is ["${args.join('", "')}"]`);
 
     const foundHandler = FileManagerHandlers.find(
       (handler) => handler.command === command

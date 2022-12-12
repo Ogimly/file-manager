@@ -1,7 +1,7 @@
 import { EOL, cpus, homedir, userInfo, arch } from 'os';
 
 import { errorCode } from '../const.js';
-import { writeMessage } from '../utils/input-output.js';
+import { writeMessage, writeTable } from '../utils/input-output.js';
 
 const parameterData = [
   {
@@ -49,5 +49,5 @@ export const os = (parameter) => {
   const { message, table } = foundData.getData();
 
   writeMessage(message);
-  if (table) console.table(table);
+  if (table) writeTable(table);
 };

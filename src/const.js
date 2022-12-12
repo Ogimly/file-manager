@@ -1,3 +1,5 @@
+export const LOG_FILE_NAME = 'log.txt';
+
 export const errorCode = {
   noCommand: 'noCommand',
   noUser: 'noUser',

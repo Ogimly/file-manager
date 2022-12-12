@@ -2,6 +2,7 @@ import { readdir } from 'fs/promises';
 
 import { helpTable } from '../const.js';
 import { getRoot, checkAsDirectory } from '../utils/files.js';
+import { writeTable } from '../utils/input-output.js';
 
 export const up = () => {
   const cwd = process.cwd();
@@ -37,9 +38,9 @@ export const ls = async () => {
     }))
     .sort((a, b) => (a.Type === b.Type ? sortBy(a, b, 'Name') : sortBy(a, b, 'Type')));
 
-  console.table(files);
+  writeTable(files);
 };
 
 export const help = () => {
-  console.table(helpTable);
+  writeTable(helpTable);
 };
